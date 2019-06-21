@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block contents %}
+ <style>
+	.form-login {
+	  width: 100%;
+	  max-width: 1000px;
+	  padding: 10px;
+	  margin: auto;
+	}
+ </style>
+<form action="" method="POST" class="form-login">
+	{{ form.hidden_tag() }}
+  <div class="text-center mb-4">
+    <h1 class="h3 mb-3 font-weight-normal">Submit Question</h1>
+  </div>
+
+  <div class="form-label-group mb-1 w-50 ml-auto mr-auto text-center">
+	  {{ form.title.label }}
+	  {% if form.title.errors %}
+		{{ form.title(class='form-control form-control-sm is-invalid')}}
+		{% for error in form.title.errors %}
+			<span class='text-danger'>{{ error }}</span><br/>
+		{% endfor %}
+	  {% else %}
+		{{ form.title(class='form-control')}}
+	  {% endif %}
+  </div>
+
+  <div class="form-label-group mb-1">
+	  {{ form.body.label }}
+	  {% if form.body.errors %}
+		{{ form.body(class='form-control is-invalid')}}
+		{% for error in form.body.errors %}
+			<span class='text-danger'>{{ error }}</span><br/>
+		{% endfor %}
+	  {% else %}
+		{{ form.body(class='form-control', id='summernote')}}
+	  {% endif %}
+  </div>
+
+  <div class="mb-3">
+  </div>
+  {{ form.submit(class='btn btn-lg btn-primary btn-block') }}
+</form>
+    <div id="summernote"></div>
+    <script>
+      $('#summernote').summernote({
+        tabsize: 2,
+        height: 200,
+        width: 1000
+      });
+    </script>
+</html>
+
+	
+	
+	
+	
+{% endblock contents %}

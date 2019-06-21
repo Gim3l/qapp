@@ -1,0 +1,209 @@
+{% extends 'layout.html' %}
+
+{% block contents %}
+	
+<div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+
+                    <div class="card-body">
+                        <div class="card-title mb-4">
+                            <div class="d-flex justify-content-start">
+                                <div class="image-container">
+                                    <img src="{{ url_for('static', filename='images/users/'+current_user.image_file)}}" id="imgProfile" style="width: 150px; height: 150px" class="img-thumbnail rounded-circle" />
+                                </div>
+                                <div class="ml-3">
+                                    <h2 class="d-block" style="font-size: 1.5rem; font-weight: bold"><a href="javascript:void(0);">{{ current_user.username }}</a></h2>
+                                    <h6 class="d-block"><a href="javascript:void(0)">{{ current_user.questions.__len__() }}</a> Questions submitted</h6>
+                                    <h6 class="d-block"><a href="javascript:void(0)">{{ current_user.answers.__len__() }}</a> Answers submitted {{ current_user.password }}</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="basicInfo-tab" data-toggle="tab" href="#basicInfo" role="tab" aria-controls="basicInfo" aria-selected="true">Basic Info</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="editAccount-tab" data-toggle="tab" href="#editAccount" role="tab" aria-controls="editAccount" aria-selected="false">Edit Account</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="changePass-tab" data-toggle="tab" href="#changePass" role="tab" aria-controls="changePass" aria-selected="false">Change Password</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content ml-1" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="basicInfo" role="tabpanel" aria-labelledby="basicInfo-tab">
+                                        
+										    <div class="row">
+												<div class="col-sm-3 col-md-2 col-5">
+													<label style="font-weight:bold;">Name</label>
+												</div>
+											<div class="col-md-8 col-6">
+                                                {% if current_user.name %}
+													{{ current_user.name }}
+                                                {% else %}
+													----- -----
+                                                {% endif %}
+											</div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Username</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{ current_user.username }}
+                                            </div>
+                                        </div>
+                                        <hr />
+
+                                        <div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Email</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{ current_user.email }}
+                                            </div>
+                                        </div>
+                                        <hr />
+										<div class="row">
+                                            <div class="col-sm-3 col-md-2 col-5">
+                                                <label style="font-weight:bold;">Joined on</label>
+                                            </div>
+                                            <div class="col-md-8 col-6">
+                                                {{ current_user.join_date.strftime('%d.%m.%Y') }}
+                                            </div>
+                                        </div>
+                                        <hr />
+                                    </div>
+                                    <!-- FORM FOR EDITIING ACCOUNT -->
+                                    <div class="tab-pane fade" id="editAccount" role="tabpanel" aria-labelledby="EditAccount-tab">
+                                        <form action="" method="POST" class="form-login" enctype="multipart/form-data">
+											{{ form.hidden_tag() }}
+											<div class="form-label-group mb-1">
+												  {{ form.name.label }}
+												  {% if form.name.errors %}
+													{{ form.name(class='form-control is-invalid')}}
+													{% for error in form.name.errors %}
+														<span class='text-danger'>{{ error }}</span><br/>
+													{% endfor %}
+												  {% else %}
+													{{ form.name(class='form-control')}}
+												  {% endif %}
+											  </div>
+											  <div class="form-label-group mb-1">
+												  {{ form.username.label }}
+												  {% if form.username.errors %}
+													{{ form.username(class='form-control is-invalid')}}
+													{% for error in form.username.errors %}
+														<span class='text-danger'>{{ error }}</span><br/>
+													{% endfor %}
+												  {% else %}
+													{{ form.username(class='form-control')}}
+												  {% endif %}
+											  </div>
+											  <div class="form-label-group mb-1">
+												  {{ form.email.label }}
+												  {% if form.email.errors %}
+													{{ form.email(class='form-control is-invalid')}}
+													{% for error in form.email.errors %}
+														<span class='text-danger'>{{ error }}</span><br/>
+													{% endfor %}
+												  {% else %}
+													{{ form.email(class='form-control')}}
+												  {% endif %}
+											  </div>
+												
+												<div class="input-group mb-1">
+													
+												  <div class="input-group-prepend">
+														<span class="input-group-text" id="inputGroupImage">Upload</span>
+												  </div>
+							
+												  <div class="custom-file">
+													  
+													  {% if form.image.errors %}
+														{{ form.image(class='custom-file-input is-invalid')}}
+													  {% else %}
+														{{ form.image(class='custom-file-input', id='inputGroupImage')}}
+													  {% endif %}
+													  {{ form.image.label(class = 'custom-file-label') }}
+													</div>
+											  </div>
+												{% if form.image.errors %}
+													{% for error in form.image.errors %}
+														<div style=>
+															<span class='text-danger'>{{ error }}</span><br/>
+														</div>
+														{% endfor %}
+												{% endif %}
+													
+											  <div class="form-label-group mb-1">
+												  {{ form.current_password.label }}
+												  {% if form.current_password.errors %}
+													{{ form.current_password(class='form-control is-invalid')}}
+													{% for error in form.current_password.errors %}
+														<span class='text-danger'>{{ error }}</span><br/>
+													{% endfor %}
+												  {% else %}
+													{{ form.current_password(class='form-control')}}
+												  {% endif %}
+											  </div>
+											  {{ form.submit(class='btn btn-lg btn-primary btn-block mt-3') }}
+											</form>
+                                    </div>
+                                    <!-- FORM FOR CHANGING ACCOUNT PASSWORD -->
+                                    <div class="tab-pane fade" id="changePass" role="tabpanel" aria-labelledby="ChangePass-tab">
+										<form action = "" method='POST'>
+											{{ change_pass_form.hidden_tag() }}
+											 <div class="form-label-group mb-1">
+												  {{ change_pass_form.new_password.label }}
+												  {% if change_pass_form.new_password.errors %}
+													{{ change_pass_form.new_password(class='form-control is-invalid')}}
+													{% for error in change_pass_form.new_password.errors %}
+														<span class='text-danger'>{{ error }}</span><br/>
+													{% endfor %}
+												  {% else %}
+													{{ change_pass_form.new_password(class='form-control')}}
+												  {% endif %}
+											  </div>
+											  <div class="form-label-group mb-1">
+												  {{ change_pass_form.confirm_password.label }}
+												  {% if change_pass_form.confirm_password.errors %}
+													{{ change_pass_form.confirm_password(class='form-control is-invalid')}}
+													{% for error in change_pass_form.confirm_password.errors %}
+														<span class='text-danger'>{{ error }}</span><br/>
+													{% endfor %}
+												  {% else %}
+													{{ change_pass_form.confirm_password(class='form-control')}}
+												  {% endif %}
+											  </div>
+											  <div class="form-label-group mb-1">
+												  {{ change_pass_form.current_password.label }}
+												  {% if change_pass_form.current_password.errors %}
+													{{ change_pass_form.current_password(class='form-control is-invalid')}}
+													{% for error in change_pass_form.current_password.errors %}
+														<span class='text-danger'>{{ error }}</span><br/>
+													{% endfor %}
+												  {% else %}
+													{{ change_pass_form.current_password(class='form-control')}}
+												  {% endif %}
+											  </div>
+											  {{ change_pass_form.submit(class='btn btn-lg btn-primary btn-block mt-3') }}
+										</form>
+									</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contents %}

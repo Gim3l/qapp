@@ -1,0 +1,111 @@
+{% extends 'layout.html' %}
+
+{% block contents %}
+<style>
+.bd-callout {
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #eee;
+    border-left-width: .25rem;
+    border-radius: .25rem
+}
+</style>
+	<h1>Question</h1>
+	<div class="card bd-callout" style="border-left-color: #5bc0de">
+	  <div class="card-body">
+		<h5 class="card-title">{{ ques.title }}</h5>
+		<div class="row">
+		
+			<div class='mr-2' style='display: inline-block;'>
+				<img src="{{ url_for('static', filename='images/users/'+ques.author.image_file) }}"
+					width='40px' height='40px' class='rounded-circle'>
+			</div>
+			
+			<div style='display: inline-block;'>
+				<p class="text-muted">Asked by: {{ ques.author.username }} <br/>
+					Submitted on: {{ ques.pub_date.strftime('%d.%m.%Y') }} at {{  ques.pub_date.strftime('%H:%M') }}</p>
+			</div>
+		</div>
+		<div>
+			
+			{% if ques.author == current_user %}
+				<span class="badge badge-info" ><a style = 'color: #fff;' 
+					href="{{ url_for('edit_question', question_id=ques.id) }}">Edit</a></span>
+				<span class="badge badge-danger" ><a style = 'color: #fff;' 
+					href="{{ url_for('edit_question', question_id=ques.id) }}">Delete</a></span>
+			{% endif %}
+			
+			{% if current_user != ques.author %}
+				<span class="badge badge-warning" ><a style = 'color: #fff;' 
+					href="{{ url_for('edit_question', question_id=ques.id) }}">Report</a></span>
+			{% endif %}
+			
+			{% if ques.body %}
+				<h6 class='mb-3 mt-2 border-info 
+					 border-top rounded-top' ></h6>
+					 <p>{{ ques.body | safe }}</p>
+				<div class="card-text border-bottom border-info rounded-bottom"></div>
+			{% endif %}
+		</div>
+	  </div>
+	</div>
+	
+	<!-- DISPLAY ANSWERS --->
+<h3 class = 'mb-2'>Answers:</h3> <hr/>
+{% for answer in ques.answers %}
+<div class="container mb-2">
+	
+	<div class="col-md-12">
+        <div class="card bg-light">
+            <div class="card-body">
+               <section class="post-heading">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="media">
+                              <div class="media-left">
+                                <a href="#">
+                                  <img class="img-thumbnail rounded-circle mr-2" 
+									src="{{ url_for('static', filename='images/users/'+
+										answer.author.image_file) }}" width="60" 
+											height="60" alt="...">
+                                </a>
+                              </div>
+                              <div class="media-body">
+                                <h4 class="media-heading">{{ answer.author.username }}</h4>
+                                <span class="text-muted">{{ answer.pub_date.strftime('%H:%M') }}</span>
+                              </div>
+                            </div>
+                        </div>
+                    </div>             
+               </section><hr/>
+               <section class="post-body">
+                   <!-- Displays answer body for each current answer -->
+                   <p class='card-body'>{{ answer.content }}</p>
+               </section>
+               <section class="post-footer">
+                   <hr>
+            
+                   </div>
+               </section>
+            </div>
+        </div> 
+</div>
+
+{% endfor %}
+<!-- Block for posting new answer, shown to logged in users only -->
+{% if current_user.is_authenticated %}
+<h3>Submit Answer</h3><hr/>
+<div class="container card bg-light">
+	<form action="{{ url_for('question', question_id=ques.id)}}" method="POST">
+		
+			{{ form.hidden_tag() }}
+		<div class="form-group">
+			{{ form.content(class='form-control mt-3', id = 'answerField') }}
+			{{ form.submit(class='btn btn-sm btn-primary mt-3') }}
+		</div>
+
+	</form>
+</div>
+{% endif %}  
+{% endblock %}

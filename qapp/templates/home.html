@@ -1,0 +1,103 @@
+{% extends 'layout.html' %}
+
+{% block contents %}
+<style>
+.bd-callout {
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #eee;
+    border-left-width: .25rem;
+    border-radius: .25rem
+}
+
+.bd-callout h4 {
+    margin-top: 0;
+    margin-bottom: .25rem
+    
+}
+
+.bd-callout p:last-child {
+    margin-bottom: 0
+}
+
+.bd-callout code {
+    border-radius: .25rem
+}
+
+.bd-callout+.bd-callout {
+    margin-top: -.25rem
+}
+
+.bd-callout-info {
+    border-left-color: #5bc0de
+}
+
+.bd-callout-info h4 {
+    color: #5bc0de
+}
+
+.bd-callout-warning {
+    border-left-color: #f0ad4e
+}
+
+.bd-callout-warning h4 {
+    color: #f0ad4e
+}
+
+.bd-callout-danger {
+    border-left-color: #d9534f
+}
+
+.bd-callout-danger h4 {
+    color: #d9534f
+}
+
+.bd-callout-purple {
+    border-left-color: #a44fd9
+}
+
+.bd-callout-purple h4 {
+    color: #a44fd9
+}
+
+.qlink {
+	text-decoration: none;
+	color: inherit;
+}
+.qlink:hover {
+	text-decoration: inherit;
+}
+</style>
+	<h1>Questions</h1>
+		
+	  {% for question in questions.items %}
+		<div class="bd-callout bd-callout-{{ choice(styles) }}">
+			<h4><a href="{{ url_for('question', question_id=question.id) }}" class="qlink">
+					{{ question.title }}</a>
+			</h4>
+			<p class='text-disabled'>{{ question.author.username }}</p>
+		</div>
+	  {% endfor %}
+	
+  
+<div class="btn-toolbar" role="toolbar">
+	<div class="btn-group ml-auto mr-auto" role="group">
+		{% for page in questions.iter_pages(left_current=2, left_edge=1, right_current=3, right_edge=1) %}
+		  {% if page %}
+			{% if questions.page == page %}
+				<a class="btn btn-light border-secondary" style="color: #444;"
+					href="{{ url_for('home', page=page) }}">{{ page }}</a>
+			{% else %}
+				<a class="btn btn-secondary" style="color: #fff;"
+					href="{{ url_for('home', page=page) }}">{{ page }}</a>
+			{% endif %}
+		  {% else %}
+			...
+		  {% endif %}
+		
+		{% endfor %}
+	</div>
+</div>
+  
+{% endblock %}
